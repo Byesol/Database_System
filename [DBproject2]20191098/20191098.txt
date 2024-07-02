@@ -1,0 +1,356 @@
+CREATE DATABASE 20191098_project;
+USE 20191098_project;
+CREATE TABLE District (District VARCHAR(32) NOT NULL, SchoolDistrict INTEGER NOT NULL, PRIMARY KEY (District));
+CREATE TABLE Property (PropertyID CHAR(8) NOT NULL, address VARCHAR(32) NOT NULL, NumberOfBedrooms INTEGER NOT NULL CHECK (NumberOfBedrooms >= 0), NumberOfBathrooms INTEGER NOT NULL CHECK (NumberOfBathrooms >= 0), District VARCHAR(32) NOT NULL, Type VARCHAR(32) NOT NULL, PRIMARY KEY (PropertyID), FOREIGN KEY (District) REFERENCES District(District));
+CREATE TABLE Photo (PhotoID CHAR(8) NOT NULL, image VARCHAR(32) NOT NULL, PhotoType VARCHAR(32) NOT NULL, PropertyID CHAR(8) NOT NULL, PRIMARY KEY (PhotoID), FOREIGN KEY (PropertyID) REFERENCES Property(PropertyID));
+CREATE TABLE Agent (AgentID CHAR(8) NOT NULL, Name VARCHAR(32) NOT NULL, ContactInfo VARCHAR(32) NULL, PRIMARY KEY (AgentID));
+CREATE TABLE Seller (SellerID CHAR(8) NOT NULL, Name VARCHAR(32) NOT NULL, ContactInfo VARCHAR(32) NOT NULL, PRIMARY KEY (SellerID));
+CREATE TABLE Buyer (BuyerID CHAR(8) NOT NULL, Name VARCHAR(32) NOT NULL, ContactInfo VARCHAR(32) NULL, PRIMARY KEY (BuyerID));
+CREATE TABLE Transaction (TransactionID CHAR(8) NOT NULL, PropertyID CHAR(8) NOT NULL, BuyerAgentID CHAR(8) NULL, SellerAgentID CHAR(8) NOT NULL, DateSold DATE NULL, SaleDate DATE NOT NULL, SalePrice NUMERIC(12, 0) NULL CHECK (SalePrice > 0 OR SalePrice IS NULL), ListingPrice NUMERIC(12, 0) NOT NULL CHECK (ListingPrice > 0), SellerID CHAR(8) NOT NULL, BuyerID CHAR(8) NULL, PRIMARY KEY (TransactionID), FOREIGN KEY (BuyerAgentID) REFERENCES Agent(AgentID), FOREIGN KEY (SellerAgentID) REFERENCES Agent(AgentID), FOREIGN KEY (PropertyID) REFERENCES Property(PropertyID), FOREIGN KEY (SellerID) REFERENCES Seller(SellerID), FOREIGN KEY (BuyerID) REFERENCES Buyer(BuyerID), CHECK (DateSold >= SaleDate));
+
+-- Inserting Sample Data
+-- Districts
+INSERT INTO District (District, SchoolDistrict) VALUES ('Dongdaemun', 1);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Jung', 1);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Mapo', 2);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Seodaemun', 2);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Eunpyeong', 2);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Guro', 3);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Geumcheon', 3);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Yeongdeungpo', 3);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Nowon', 4);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Dobong', 4);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Yongsan', 5);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Jongno', 5);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Jung-gu', 5);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Gangdong', 6);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Songpa', 6);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Gangseo', 7);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Yangcheon', 7);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Gangnam', 8);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Seocho', 8);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Gwanak', 9);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Dongjak', 9);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Gangbuk', 10);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Seongbuk', 10);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Gangwon', 11);
+INSERT INTO District (District, SchoolDistrict) VALUES ('Seongnam', 11);
+
+-- Properties
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000001', '123 Maple St', 3, 2, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000002', '456 Oak St', 4, 3, 'Seodaemun', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000003', '789 Pine St', 2, 1, 'Gangnam', 'Studio');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000004', '101 Birch St', 5, 4, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000005', '102 Cedar St', 1, 1, 'Gangseo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000006', '103 Elm St', 4, 2, 'Dongjak', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000007', '104 Fir St', 3, 2, 'Gangbuk', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000008', '105 Spruce St', 6, 3, 'Jongno', 'House');
+-- New Properties for Unsold Listings
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000009', '106 Maple St', 2, 1, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000010', '107 Oak St', 3, 2, 'Mapo', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000011', '108 Pine St', 1, 1, 'Mapo', 'Studio');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000012', '109 Birch St', 4, 3, 'Mapo', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000013', '110 Cedar St', 3, 2, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000014', '111 Elm St', 4, 2, 'Mapo', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000015', '112 Fir St', 3, 2, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000016', '113 Spruce St', 5, 3, 'Mapo', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000017', '114 Maple St', 2, 1, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000018', '115 Oak St', 3, 2, 'Mapo', 'Detached House');
+-- New Properties for Unsold Listings in Gangnam and Seocho
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000019', '200 Pine St', 4, 2, 'Gangnam', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000020', '201 Oak St', 3, 1, 'Gangnam', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000021', '202 Maple St', 4, 2, 'Gangnam', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000022', '203 Birch St', 5, 3, 'Gangnam', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000023', '300 Pine St', 2, 1, 'Seocho', 'Studio');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000024', '301 Oak St', 4, 2, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000025', '302 Maple St', 4, 2, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000026', '303 Birch St', 3, 2, 'Seocho', 'Apartment');
+
+
+-- Agents
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000001', 'John Doe', 'john.doe@example.com');
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000002', 'Jane Smith', 'jane.smith@example.com');
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000003', 'Emily Davis', 'emily.davis@example.com');
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000004', 'Michael Brown', 'michael.brown@example.com');
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000005', 'Sarah Wilson', 'sarah.wilson@example.com');
+
+-- Sellers
+INSERT INTO Seller (SellerID, Name, ContactInfo) VALUES ('S0000001', 'Alice Brown', 'alice.brown@example.com');
+INSERT INTO Seller (SellerID, Name, ContactInfo) VALUES ('S0000002', 'Bob Green', 'bob.green@example.com');
+INSERT INTO Seller (SellerID, Name, ContactInfo) VALUES ('S0000003', 'Carol White', 'carol.white@example.com');
+INSERT INTO Seller (SellerID, Name, ContactInfo) VALUES ('S0000004', 'David Black', 'david.black@example.com');
+
+-- Buyers
+INSERT INTO Buyer (BuyerID, Name, ContactInfo) VALUES ('B0000001', 'Charlie Black', 'charlie.black@example.com');
+INSERT INTO Buyer (BuyerID, Name, ContactInfo) VALUES ('B0000002', 'Diana White', 'diana.white@example.com');
+INSERT INTO Buyer (BuyerID, Name, ContactInfo) VALUES ('B0000003', 'Eve Johnson', 'eve.johnson@example.com');
+INSERT INTO Buyer (BuyerID, Name, ContactInfo) VALUES ('B0000004', 'Frank Miller', 'frank.miller@example.com');
+
+-- Transactions
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000001', 'P0000001', 'A0000001', 'A0000002', '2021-06-15', '2021-06-01', 1500000000, 1450000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000002', 'P0000002', 'A0000002', 'A0000001', '2022-07-15', '2022-07-01', 1600000000, 1550000000, 'S0000002', 'B0000002');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000003', 'P0000003', 'A0000003', 'A0000004', '2023-05-20', '2023-05-01', 1400000000, 1380000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000004', 'P0000004', 'A0000004', 'A0000003', '2023-04-15', '2023-04-01', 1200000000, 1250000000, 'S0000004', 'B0000004');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000005', 'P0000005', 'A0000001', 'A0000005', '2022-02-20', '2022-02-01', 1100000000, 1150000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000006', 'P0000006', 'A0000005', 'A0000002', '2022-03-15', '2022-03-01', 1300000000, 1350000000, 'S0000002', 'B0000002');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000007', 'P0000007', 'A0000003', 'A0000001', '2022-01-15', '2022-01-01', 1400000000, 1420000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000008', 'P0000008', 'A0000004', 'A0000005', '2023-02-20', '2023-02-01', 1500000000, 1480000000, 'S0000004', 'B0000004');
+
+-- Unsold Properties in Mapo
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000009', 'P0000009', NULL, 'A0000002', NULL, '2023-03-01', NULL, 1100000000, 'S0000002', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000010', 'P0000010', NULL, 'A0000003', NULL, '2023-04-01', NULL, 1200000000, 'S0000003', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000011', 'P0000011', NULL, 'A0000004', NULL, '2023-05-01', NULL, 1300000000, 'S0000004', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000012', 'P0000012', NULL, 'A0000005', NULL, '2023-06-01', NULL, 1400000000, 'S0000001', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000013', 'P0000013', NULL, 'A0000001', NULL, '2023-07-01', NULL, 1500000000, 'S0000001', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000014', 'P0000014', NULL, 'A0000002', NULL, '2023-08-01', NULL, 1600000000, 'S0000002', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000015', 'P0000015', NULL, 'A0000003', NULL, '2023-09-01', NULL, 1700000000, 'S0000003', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000016', 'P0000016', NULL, 'A0000004', NULL, '2023-10-01', NULL, 1800000000, 'S0000004', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000017', 'P0000017', NULL, 'A0000005', NULL, '2023-11-01', NULL, 1900000000, 'S0000001', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000018', 'P0000018', NULL, 'A0000001', NULL, '2023-12-01', NULL, 2000000000, 'S0000001', NULL);
+-- Unsold Properties in Gangnam and Seocho
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000019', 'P0000019', NULL, 'A0000002', NULL, '2023-01-01', NULL, 1400000000, 'S0000002', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000020', 'P0000020', NULL, 'A0000003', NULL, '2023-02-01', NULL, 1500000000, 'S0000003', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000021', 'P0000021', NULL, 'A0000004', NULL, '2023-03-01', NULL, 1600000000, 'S0000004', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000022', 'P0000022', NULL, 'A0000005', NULL, '2023-04-01', NULL, 1700000000, 'S0000001', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000023', 'P0000023', NULL, 'A0000001', NULL, '2023-05-01', NULL, 1800000000, 'S0000001', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000024', 'P0000024', NULL, 'A0000002', NULL, '2023-06-01', NULL, 1900000000, 'S0000002', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000025', 'P0000025', NULL, 'A0000003', NULL, '2023-07-01', NULL, 2000000000, 'S0000003', NULL);
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000026', 'P0000026', NULL, 'A0000004', NULL, '2023-08-01', NULL, 2100000000, 'S0000004', NULL);
+
+-- New Agents
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000006', 'Anna Lee', 'anna.lee@example.com');
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000007', 'David Kim', 'david.kim@example.com');
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000008', 'Laura Park', 'laura.park@example.com');
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000009', 'James Choi', 'james.choi@example.com');
+INSERT INTO Agent (AgentID, Name, ContactInfo) VALUES ('A0000010', 'Emily Lee', 'emily.lee@example.com');
+
+-- New Properties
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000027', '500 Maple St', 3, 2, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000028', '501 Oak St', 4, 3, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000029', '502 Pine St', 2, 1, 'Gangnam', 'Studio');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000030', '503 Birch St', 5, 4, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000031', '504 Cedar St', 1, 1, 'Gangseo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000032', '505 Elm St', 4, 2, 'Dongjak', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000033', '506 Fir St', 3, 2, 'Gangbuk', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000034', '507 Spruce St', 6, 3, 'Jongno', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000035', '508 Maple St', 3, 2, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000036', '509 Oak St', 4, 3, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000037', '510 Pine St', 2, 1, 'Gangnam', 'Studio');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000038', '511 Birch St', 5, 4, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000039', '512 Cedar St', 1, 1, 'Gangseo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000040', '513 Elm St', 4, 2, 'Dongjak', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000041', '514 Fir St', 3, 2, 'Gangbuk', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000042', '515 Spruce St', 6, 3, 'Jongno', 'Detached House');
+-- New Properties
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000043', '516 Maple St', 3, 2, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000044', '517 Oak St', 4, 3, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000045', '518 Pine St', 2, 1, 'Gangnam', 'Studio');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000046', '519 Birch St', 5, 4, 'Seocho', 'Detached House');
+
+
+-- New Transactions for 2021
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000027', 'P0000027', 'A0000001', 'A0000006', '2021-01-20', '2021-01-15', 1500000000, 1450000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000028', 'P0000028', 'A0000002', 'A0000007', '2021-02-20', '2021-02-15', 1600000000, 1550000000, 'S0000002', 'B0000002');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000029', 'P0000029', 'A0000003', 'A0000008', '2021-03-20', '2021-03-15', 1400000000, 1380000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000030', 'P0000030', 'A0000004', 'A0000009', '2021-04-20', '2021-04-15', 1200000000, 1250000000, 'S0000004', 'B0000004');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000031', 'P0000031', 'A0000005', 'A0000010', '2021-05-20', '2021-05-15', 1100000000, 1150000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000032', 'P0000032', 'A0000006', 'A0000001', '2021-06-20', '2021-06-15', 1500000000, 1450000000, 'S0000002', 'B0000002');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000033', 'P0000033', 'A0000007', 'A0000002', '2021-07-20', '2021-07-15', 1600000000, 1550000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000034', 'P0000034', 'A0000008', 'A0000003', '2021-08-20', '2021-08-15', 1400000000, 1380000000, 'S0000004', 'B0000004');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000035', 'P0000035', 'A0000009', 'A0000004', '2021-09-20', '2021-09-15', 1200000000, 1250000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000036', 'P0000036', 'A0000010', 'A0000005', '2021-10-20', '2021-10-15', 1100000000, 1150000000, 'S0000002', 'B0000002');
+
+-- New Transactions for 2023
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000037', 'P0000037', 'A0000001', 'A0000006', '2023-01-20', '2023-01-15', 1500000000, 1450000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000038', 'P0000038', 'A0000002', 'A0000007', '2023-02-20', '2023-02-15', 1600000000, 1550000000, 'S0000004', 'B0000004');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000039', 'P0000039', 'A0000003', 'A0000008', '2023-03-20', '2023-03-15', 1400000000, 1380000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000040', 'P0000040', 'A0000004', 'A0000009', '2023-04-20', '2023-04-15', 1200000000, 1250000000, 'S0000002', 'B0000002');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000041', 'P0000041', 'A0000005', 'A0000010', '2023-05-20', '2023-05-15', 1100000000, 1150000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000042', 'P0000042', 'A0000006', 'A0000001', '2023-06-20', '2023-06-15', 1500000000, 1450000000, 'S0000004', 'B0000004');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000043', 'P0000043', 'A0000007', 'A0000002', '2023-07-20', '2023-07-15', 1600000000, 1550000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000044', 'P0000044', 'A0000008', 'A0000003', '2023-08-20', '2023-08-15', 1400000000, 1380000000, 'S0000002', 'B0000002');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000045', 'P0000045', 'A0000009', 'A0000004', '2023-09-20', '2023-09-15', 1200000000, 1250000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000046', 'P0000046', 'A0000010', 'A0000005', '2023-10-20', '2023-10-15', 1100000000, 1150000000, 'S0000004', 'B0000004');
+
+
+-- New Properties for 2022
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000047', '600 Maple St', 3, 2, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000048', '601 Oak St', 4, 3, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000049', '602 Pine St', 2, 1, 'Gangnam', 'Studio');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000050', '603 Birch St', 5, 4, 'Seocho', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000051', '604 Cedar St', 1, 1, 'Gangseo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000052', '605 Elm St', 4, 2, 'Dongjak', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000053', '606 Fir St', 3, 2, 'Gangbuk', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000054', '607 Spruce St', 6, 3, 'Jongno', 'Detached House');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000055', '608 Maple St', 3, 2, 'Mapo', 'Apartment');
+INSERT INTO Property (PropertyID, address, NumberOfBedrooms, NumberOfBathrooms, District, Type) VALUES ('P0000056', '609 Oak St', 4, 3, 'Seocho', 'Detached House');
+
+-- New Transactions for 2022
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000047', 'P0000047', 'A0000001', 'A0000006', '2022-01-20', '2022-01-15', 1500000000, 1450000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000048', 'P0000048', 'A0000002', 'A0000007', '2022-02-20', '2022-02-15', 1600000000, 1550000000, 'S0000002', 'B0000002');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000049', 'P0000049', 'A0000003', 'A0000008', '2022-03-20', '2022-03-15', 1400000000, 1380000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000050', 'P0000050', 'A0000004', 'A0000009', '2022-04-20', '2022-04-15', 1200000000, 1250000000, 'S0000004', 'B0000004');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000051', 'P0000051', 'A0000005', 'A0000010', '2022-05-20', '2022-05-15', 1100000000, 1150000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000052', 'P0000052', 'A0000006', 'A0000001', '2022-06-20', '2022-06-15', 1500000000, 1450000000, 'S0000002', 'B0000002');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000053', 'P0000053', 'A0000007', 'A0000002', '2022-07-20', '2022-07-15', 1600000000, 1550000000, 'S0000003', 'B0000003');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000054', 'P0000054', 'A0000008', 'A0000003', '2022-08-20', '2022-08-15', 1400000000, 1380000000, 'S0000004', 'B0000004');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000055', 'P0000055', 'A0000009', 'A0000004', '2022-09-20', '2022-09-15', 1200000000, 1250000000, 'S0000001', 'B0000001');
+INSERT INTO Transaction (TransactionID, PropertyID, BuyerAgentID, SellerAgentID, DateSold, SaleDate, SalePrice, ListingPrice, SellerID, BuyerID) VALUES ('T0000056', 'P0000056', 'A0000010', 'A0000005', '2022-10-20', '2022-10-15', 1100000000, 1150000000, 'S0000002', 'B0000002');
+
+-- Studio or one-bedroom apartments (at least one interior photo)
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000001', 'interior1.jpg', 'interior', 'P0000003');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000002', 'interior2.jpg', 'interior', 'P0000005');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000003', 'interior3.jpg', 'interior', 'P0000011');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000004', 'interior4.jpg', 'interior', 'P0000023');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000005', 'interior5.jpg', 'interior', 'P0000029');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000006', 'interior6.jpg', 'interior', 'P0000037');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000007', 'interior7.jpg', 'interior', 'P0000045');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000008', 'interior8.jpg', 'interior', 'P0000049');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000009', 'interior9.jpg', 'interior', 'P0000051');
+
+-- Multi-bedroom apartments or detached houses (at least one exterior photo and one floor plan)
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000010', 'exterior1.jpg', 'exterior', 'P0000001');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000011', 'floor_plan1.jpg', 'floor_plan', 'P0000001');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000012', 'exterior2.jpg', 'exterior', 'P0000002');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000013', 'floor_plan2.jpg', 'floor_plan', 'P0000002');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000014', 'exterior3.jpg', 'exterior', 'P0000004');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000015', 'floor_plan3.jpg', 'floor_plan', 'P0000004');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000016', 'exterior4.jpg', 'exterior', 'P0000006');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000017', 'floor_plan4.jpg', 'floor_plan', 'P0000006');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000018', 'exterior5.jpg', 'exterior', 'P0000007');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000019', 'floor_plan5.jpg', 'floor_plan', 'P0000007');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000020', 'exterior6.jpg', 'exterior', 'P0000008');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000021', 'floor_plan6.jpg', 'floor_plan', 'P0000008');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000022', 'exterior7.jpg', 'exterior', 'P0000010');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000023', 'floor_plan7.jpg', 'floor_plan', 'P0000010');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000024', 'exterior8.jpg', 'exterior', 'P0000012');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000025', 'floor_plan8.jpg', 'floor_plan', 'P0000012');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000026', 'exterior9.jpg', 'exterior', 'P0000013');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000027', 'floor_plan9.jpg', 'floor_plan', 'P0000013');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000028', 'exterior10.jpg', 'exterior', 'P0000014');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000029', 'floor_plan10.jpg', 'floor_plan', 'P0000014');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000030', 'exterior11.jpg', 'exterior', 'P0000015');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000031', 'floor_plan11.jpg', 'floor_plan', 'P0000015');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000032', 'exterior12.jpg', 'exterior', 'P0000016');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000033', 'floor_plan12.jpg', 'floor_plan', 'P0000016');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000034', 'exterior13.jpg', 'exterior', 'P0000017');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000035', 'floor_plan13.jpg', 'floor_plan', 'P0000017');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000036', 'exterior14.jpg', 'exterior', 'P0000018');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000037', 'floor_plan14.jpg', 'floor_plan', 'P0000018');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000038', 'exterior15.jpg', 'exterior', 'P0000019');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000039', 'floor_plan15.jpg', 'floor_plan', 'P0000019');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000040', 'exterior16.jpg', 'exterior', 'P0000020');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000041', 'floor_plan16.jpg', 'floor_plan', 'P0000020');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000042', 'exterior17.jpg', 'exterior', 'P0000021');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000043', 'floor_plan17.jpg', 'floor_plan', 'P0000021');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000044', 'exterior18.jpg', 'exterior', 'P0000022');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000045', 'floor_plan18.jpg', 'floor_plan', 'P0000022');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000046', 'exterior19.jpg', 'exterior', 'P0000024');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000047', 'floor_plan19.jpg', 'floor_plan', 'P0000024');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000048', 'exterior20.jpg', 'exterior', 'P0000025');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000049', 'floor_plan20.jpg', 'floor_plan', 'P0000025');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000050', 'exterior21.jpg', 'exterior', 'P0000026');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000051', 'floor_plan21.jpg', 'floor_plan', 'P0000026');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000052', 'exterior22.jpg', 'exterior', 'P0000027');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000053', 'floor_plan22.jpg', 'floor_plan', 'P0000027');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000054', 'exterior23.jpg', 'exterior', 'P0000028');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000055', 'floor_plan23.jpg', 'floor_plan', 'P0000028');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000056', 'exterior24.jpg', 'exterior', 'P0000030');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000057', 'floor_plan24.jpg', 'floor_plan', 'P0000030');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000058', 'exterior25.jpg', 'exterior', 'P0000032');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000059', 'floor_plan25.jpg', 'floor_plan', 'P0000032');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000060', 'exterior26.jpg', 'exterior', 'P0000033');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000061', 'floor_plan26.jpg', 'floor_plan', 'P0000033');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000062', 'exterior27.jpg', 'exterior', 'P0000034');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000063', 'floor_plan27.jpg', 'floor_plan', 'P0000034');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000064', 'exterior28.jpg', 'exterior', 'P0000035');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000065', 'floor_plan28.jpg', 'floor_plan', 'P0000035');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000066', 'exterior29.jpg', 'exterior', 'P0000036');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000067', 'floor_plan29.jpg', 'floor_plan', 'P0000036');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000068', 'exterior30.jpg', 'exterior', 'P0000038');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000069', 'floor_plan30.jpg', 'floor_plan', 'P0000038');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000070', 'exterior31.jpg', 'exterior', 'P0000039');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000071', 'floor_plan31.jpg', 'floor_plan', 'P0000039');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000072', 'exterior32.jpg', 'exterior', 'P0000040');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000073', 'floor_plan32.jpg', 'floor_plan', 'P0000040');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000074', 'exterior33.jpg', 'exterior', 'P0000041');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000075', 'floor_plan33.jpg', 'floor_plan', 'P0000041');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000076', 'exterior34.jpg', 'exterior', 'P0000042');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000077', 'floor_plan34.jpg', 'floor_plan', 'P0000042');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000078', 'exterior35.jpg', 'exterior', 'P0000043');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000079', 'floor_plan35.jpg', 'floor_plan', 'P0000043');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000080', 'exterior36.jpg', 'exterior', 'P0000044');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000081', 'floor_plan36.jpg', 'floor_plan', 'P0000044');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000082', 'exterior37.jpg', 'exterior', 'P0000046');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000083', 'floor_plan37.jpg', 'floor_plan', 'P0000046');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000084', 'exterior38.jpg', 'exterior', 'P0000047');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000085', 'floor_plan38.jpg', 'floor_plan', 'P0000047');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000086', 'exterior39.jpg', 'exterior', 'P0000048');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000087', 'floor_plan39.jpg', 'floor_plan', 'P0000048');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000088', 'exterior40.jpg', 'exterior', 'P0000050');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000089', 'floor_plan40.jpg', 'floor_plan', 'P0000050');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000090', 'exterior41.jpg', 'exterior', 'P0000052');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000091', 'floor_plan41.jpg', 'floor_plan', 'P0000052');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000092', 'exterior42.jpg', 'exterior', 'P0000053');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000093', 'floor_plan42.jpg', 'floor_plan', 'P0000053');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000094', 'exterior43.jpg', 'exterior', 'P0000054');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000095', 'floor_plan43.jpg', 'floor_plan', 'P0000054');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000096', 'exterior44.jpg', 'exterior', 'P0000055');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000097', 'floor_plan44.jpg', 'floor_plan', 'P0000055');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000098', 'exterior45.jpg', 'exterior', 'P0000056');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000099', 'floor_plan45.jpg', 'floor_plan', 'P0000056');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000100', 'interior10.jpg', 'interior', 'P0000001');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000101', 'interior11.jpg', 'interior', 'P0000002');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000102', 'interior12.jpg', 'interior', 'P0000004');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000103', 'interior13.jpg', 'interior', 'P0000006');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000104', 'interior14.jpg', 'interior', 'P0000007');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000105', 'interior15.jpg', 'interior', 'P0000008');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000106', 'interior16.jpg', 'interior', 'P0000010');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000107', 'interior17.jpg', 'interior', 'P0000012');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000108', 'interior18.jpg', 'interior', 'P0000013');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000109', 'interior19.jpg', 'interior', 'P0000014');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000110', 'interior20.jpg', 'interior', 'P0000015');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000111', 'interior21.jpg', 'interior', 'P0000016');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000112', 'interior22.jpg', 'interior', 'P0000017');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000113', 'interior23.jpg', 'interior', 'P0000018');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000114', 'interior24.jpg', 'interior', 'P0000019');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000115', 'interior25.jpg', 'interior', 'P0000020');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000116', 'interior26.jpg', 'interior', 'P0000021');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000117', 'interior27.jpg', 'interior', 'P0000022');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000118', 'interior28.jpg', 'interior', 'P0000024');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000119', 'interior29.jpg', 'interior', 'P0000025');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000120', 'interior30.jpg', 'interior', 'P0000026');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000121', 'interior31.jpg', 'interior', 'P0000027');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000122', 'interior32.jpg', 'interior', 'P0000028');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000123', 'interior33.jpg', 'interior', 'P0000030');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000124', 'interior34.jpg', 'interior', 'P0000032');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000125', 'interior35.jpg', 'interior', 'P0000033');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000126', 'interior36.jpg', 'interior', 'P0000034');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000127', 'interior37.jpg', 'interior', 'P0000035');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000128', 'interior38.jpg', 'interior', 'P0000036');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000129', 'interior39.jpg', 'interior', 'P0000038');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000130', 'interior40.jpg', 'interior', 'P0000039');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000131', 'interior41.jpg', 'interior', 'P0000040');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000132', 'interior42.jpg', 'interior', 'P0000041');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000133', 'interior43.jpg', 'interior', 'P0000042');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000134', 'interior44.jpg', 'interior', 'P0000043');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000135', 'interior45.jpg', 'interior', 'P0000044');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000136', 'interior46.jpg', 'interior', 'P0000046');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000137', 'interior47.jpg', 'interior', 'P0000047');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000138', 'interior48.jpg', 'interior', 'P0000048');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000139', 'interior49.jpg', 'interior', 'P0000050');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000140', 'interior50.jpg', 'interior', 'P0000052');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000141', 'interior51.jpg', 'interior', 'P0000053');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000142', 'interior52.jpg', 'interior', 'P0000054');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000143', 'interior53.jpg', 'interior', 'P0000055');
+INSERT INTO Photo (PhotoID, image, PhotoType, PropertyID) VALUES ('PH000144', 'interior54.jpg', 'interior', 'P0000056');
+
+$$$
+DROP TABLE Transaction;
+DROP TABLE Buyer;
+DROP TABLE Seller;
+DROP TABLE Agent;
+DROP TABLE Photo;
+DROP TABLE Property;
+DROP TABLE District;
+DROP DATABASE 20191098_project;
